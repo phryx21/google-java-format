@@ -156,13 +156,13 @@ public final class Formatter {
         visitor =
             Class.forName("com.google.googlejavaformat.java.java17.Java17InputAstVisitor")
                 .asSubclass(JavaInputAstVisitor.class)
-                .getConstructor(OpsBuilder.class, int.class)
-                .newInstance(builder, options.indentationMultiplier());
+                .getConstructor(OpsBuilder.class, int.class, boolean.class)
+                .newInstance(builder, options.indentationMultiplier(), options.putNewlineBeforeOperators());
       } catch (ReflectiveOperationException e) {
         throw new LinkageError(e.getMessage(), e);
       }
     } else {
-      visitor = new JavaInputAstVisitor(builder, options.indentationMultiplier());
+      visitor = new JavaInputAstVisitor(builder, options.indentationMultiplier(), options.putNewlineBeforeOperators());
     }
     visitor.scan(unit, null);
     builder.sync(javaInput.getText().length());

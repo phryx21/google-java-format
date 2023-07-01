@@ -24,6 +24,9 @@ import java.util.Objects;
 /** Configuration options for the formatting style. */
 enum UiFormatterStyle {
   GOOGLE("Default Google Java style", Style.GOOGLE),
+  GOOGLE_NEWLINES_BEFORE_OPERATORS(
+      "Google Java style with newlines before assignment operators",
+      Style.GOOGLE_NEWLINES_BEFORE_OPERATORS),
   AOSP("Android Open Source Project (AOSP) style", Style.AOSP);
 
   private final String description;

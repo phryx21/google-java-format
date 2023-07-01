@@ -33,25 +33,38 @@ public abstract class JavaFormatterOptions {
 
   public enum Style {
     /** The default Google Java Style configuration. */
-    GOOGLE(1),
+    GOOGLE(1, false),
 
     /** The AOSP-compliant configuration. */
-    AOSP(2);
+    AOSP(2, false),
+
+    /** The Google Java Style but with newlines before operators configuration */
+    GOOGLE_NEWLINES_BEFORE_OPERATORS(1, true);
 
     private final int indentationMultiplier;
+    private final boolean putNewlinesBeforeAssignmentOperators;
 
-    Style(int indentationMultiplier) {
+    Style(int indentationMultiplier, boolean putNewlinesBeforeAssignmentOperators) {
       this.indentationMultiplier = indentationMultiplier;
+      this.putNewlinesBeforeAssignmentOperators = putNewlinesBeforeAssignmentOperators;
     }
 
     int indentationMultiplier() {
       return indentationMultiplier;
+    }
+
+    boolean putNewlineBeforeOperators() {
+      return putNewlinesBeforeAssignmentOperators;
     }
   }
 
   /** Returns the multiplier for the unit of indent. */
   public int indentationMultiplier() {
     return style().indentationMultiplier();
+  }
+
+  public boolean putNewlineBeforeOperators() {
+    return style().putNewlineBeforeOperators();
   }
 
   public abstract boolean formatJavadoc();
