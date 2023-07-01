@@ -640,9 +640,15 @@ public class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     sync(node);
     builder.open(plusFour);
     scan(node.getVariable(), null);
-    builder.space();
+
+    if (putNewlinesBeforeAssignmentOperators) builder.breakOp(" ");
+    else builder.space();
+
     splitToken(operatorName(node));
-    builder.breakOp(" ");
+
+    if (putNewlinesBeforeAssignmentOperators) builder.space();
+    else builder.breakOp(" ");
+
     scan(node.getExpression(), null);
     builder.close();
     return null;
@@ -659,9 +665,15 @@ public class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
     sync(node);
     builder.open(plusFour);
     scan(node.getVariable(), null);
-    builder.space();
+
+    if (putNewlinesBeforeAssignmentOperators) builder.breakOp(" ");
+    else builder.space();
+
     splitToken(operatorName(node));
-    builder.breakOp(" ");
+
+    if (putNewlinesBeforeAssignmentOperators) builder.space();
+    else builder.breakOp(" ");
+
     scan(node.getExpression(), null);
     builder.close();
     return null;
@@ -3574,11 +3586,18 @@ public class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       builder.close();
 
       if (initializer.isPresent()) {
-        builder.space();
-        token(equals);
+
+        if (putNewlinesBeforeAssignmentOperators) builder.breakOp(" ");
+        else builder.space();
+
+        if (!putNewlinesBeforeAssignmentOperators) token(equals);
+
         if (initializer.get().getKind() == Tree.Kind.NEW_ARRAY
             && ((NewArrayTree) initializer.get()).getType() == null) {
           builder.open(minusFour);
+
+          if (putNewlinesBeforeAssignmentOperators) token(equals);
+
           builder.space();
           initializer.get().accept(this, null);
           builder.close();
@@ -3586,6 +3605,11 @@ public class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
           builder.open(Indent.If.make(typeBreak, plusFour, ZERO));
           {
             builder.breakToFill(" ");
+            if (putNewlinesBeforeAssignmentOperators) {
+              token(equals);
+              builder.space();
+            }
+
             scan(initializer.get(), null);
           }
           builder.close();
@@ -3701,10 +3725,23 @@ public class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       maybeAddDims(dims);
       ExpressionTree initializer = fragment.getInitializer();
       if (initializer != null) {
-        builder.space();
-        token("=");
+
+        if (putNewlinesBeforeAssignmentOperators) {
+          builder.breakOp(" ");
+        } else {
+          builder.space();
+          token("=");
+        }
+
         builder.open(plusFour);
-        builder.breakOp(" ");
+
+        if (putNewlinesBeforeAssignmentOperators) {
+          token("=");
+          builder.space();
+        } else {
+          builder.breakOp(" ");
+        }
+
         scan(initializer, null);
         builder.close();
       }
